@@ -32,10 +32,16 @@ The goal is to showcase both **strategy-level backtesting** and **portfolio-leve
 
 
 ```bash
-└── quantstrat
-    ├── README.md
+├── ProjectReport.Rmd
+├── ProjectReport.pdf
+├── README.md
+└── scripts
     └── strategy
         └── linearregression
             ├── StopLossAndTrailingStopOptimization.R
-            └── StopLossOptimization.R
+            ├── StopLossOptimization.R
+            ├── load_data.R
+            ├── lrc_strategy.R
+            ├── sma_strategy.R
+            └── visualization.R
 ```
