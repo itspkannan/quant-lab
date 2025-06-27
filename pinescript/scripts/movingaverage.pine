@@ -1,0 +1,22 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+//----------------------------------------------------------------------------------------
+// Study using Ira Epstein Trading 
+//----------------------------------------------------------------------------------------
+//@version=4
+study("HL",overlay=true,precision=2)
+var ticker = syminfo.tickerid
+var period = timeframe.period
+mac_18 = security(ticker, period, sma(close,18))
+mal_3 = security(ticker, period, sma(low,3))
+mah_3 = security(ticker, period, sma(high,3))
+mac_45 = security(ticker, period, sma(close,45))
+mac_100 = security(ticker, period, sma(close,100))
+mac_200 = security(ticker, period, sma(close,200))
+
+
+plot(mal_3,"3 Period SMA Low",color=color.red,style=plot.style_line,linewidth=4)
+plot(mah_3,"3 Period SMA High",color=color.red,style=plot.style_line,linewidth=4)
+plot(mac_18,"18 Day SMA Close",color=color.yellow,style=plot.style_line,linewidth=4)
+plot(mac_45,"45 Day SMA Close",color=color.fuchsia, style=plot.style_line,linewidth=4)
+plot(mac_100,"100 Day SMA Close",color=color.lime,style=plot.style_linebr,linewidth=4)
+plot(mac_200,"200 Day SMA Close",color=color.lime,style=plot.style_linebr,linewidth=4)

@@ -1,0 +1,26 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/4
+//
+// The script is not intented to give any hint to taking position or exiting from 
+// a position . The script was developed purely for educational purpose.
+// Swinglines learnings are from https://www.iraepstein.com/education/ira-epsteins-charting-course/course-chapter-listing/
+//@version=4
+study("Swinglines",overlay=true)
+higherHigh = low > low[1] and high > high[1]? true:false
+lowerLow = low < low[1] and high < high[1]? true:false
+outsideDay = low < low[1] and high > high[1] ? true : false
+outsideDayUp = outsideDay and close > close[1] ? true : false
+outsideDayDown = outsideDay and close < close[1] ? true : false
+insideDay = low > low[1] and high < high[1] ? true : false
+
+//--------------------------------------------------
+// Only for Inside Day
+//--------------------------------------------------
+isInsideSwingLow = (insideDay and higherHigh[1] ) or (insideDay and outsideDayDown[1])
+isInsideSwingHigh = (insideDay and lowerLow[1] ) or (insideDay and outsideDayUp[1])
+isConsecutiveInsideDay = insideDay and insideDay[1]
+isLow = isInsideSwingLow or lowerLow or outsideDayUp or (isConsecutiveInsideDay and isInsideSwingHigh[1])
+isHigh =  higherHigh or outsideDayDown or isInsideSwingHigh or (isConsecutiveInsideDay and isInsideSwingLow[1])
+
+price =  isLow ?low : high
+
+plot(price,"Swinglines",color=color.green,style=plot.style_line,linewidth=4)

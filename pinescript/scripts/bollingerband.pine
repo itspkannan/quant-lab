@@ -1,0 +1,18 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+//@version=4
+//----------------------------------------------------------------------------------------
+// Study using Ira Epstein Trading 
+//----------------------------------------------------------------------------------------
+// Reference: Used Original Trading View Source Code
+// Changes from original script
+// STD - 2
+// Moving average - 18 period
+//study("BB",overlay=true,precision=2)
+length = 18
+basis = sma(close, length)
+dev = 2 * stdev(close, length)
+upper = basis + dev
+lower = basis - dev
+plot(basis, color=color.red)
+plot(upper, color=color.yellow,style=plot.style_line,linewidth=4)
+plot(lower, color=color.yellow,style=plot.style_line,linewidth=4)
