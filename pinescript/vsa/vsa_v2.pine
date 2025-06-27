@@ -1,0 +1,69 @@
+//@version=6
+indicator("VSA Enhancements-v2", overlay=true)
+
+// === INPUTS ===
+lenVolMA       = input.int(20, title="Volume MA Length")
+trendLen       = input.int(10, title="Trend Lookback Length")
+useVWMA        = input.bool(false, title="Use VWMA Instead of SMA?")
+clusterBars    = input.int(5, title="Volume Cluster Window")
+volZThreshold  = input.float(1.5, title="Z-Score Volume Threshold")
+
+// === DATA ===
+vol        = volume
+spread     = high - low
+closeMid   = (high + low) / 2
+volMA      = useVWMA ? ta.vwma(vol, lenVolMA) : ta.sma(vol, lenVolMA)
+spreadMA   = ta.sma(spread, lenVolMA)
+priceMA    = ta.sma(close, trendLen)
+
+// === TREND CONTEXT ===
+inUptrend   = close > priceMA
+inDowntrend = close < priceMA
+
+// === CLIMAX (MODERATE) ===
+wideBar     = spread > spreadMA * 1.2
+veryHighVol = vol > volMA * 2
+
+buyClimax  = wideBar and veryHighVol and close < high - spread * 0.3 and inUptrend
+sellClimax = wideBar and veryHighVol and close > low + spread * 0.1 and inDowntrend
+
+plotshape(buyClimax, title="Buying Climax", location=location.abovebar,
+     style=shape.labeldown, text="BC", color=color.purple, textcolor=color.white, size=size.small)
+
+plotshape(sellClimax, title="Selling Climax", location=location.belowbar,
+     style=shape.labelup, text="SC", color=color.orange, textcolor=color.white, size=size.small)
+
+// === TEST BAR (CONFIRM STRENGTH) ===
+testBar = not na(close[1]) and
+          sellClimax[1] and
+          close > close[1] and
+          vol < vol[1] and
+          spread < spreadMA
+
+plotshape(testBar, title="Test After SC", location=location.belowbar,
+     style=shape.triangleup, color=color.green, size=size.tiny)
+
+// === VOLUME CLUSTERING ===
+// Volume spike condition
+volSpike = vol > volMA * 1.5 and spread < spreadMA * 1.5
+
+// Custom rolling sum using a buffer
+var int volClusterCount = 0
+volClusterCount := 0
+for i = 0 to clusterBars - 1
+    volClusterCount += volSpike[i] ? 1 : 0
+
+volCluster = volClusterCount >= 3
+plotshape(volCluster, title="Volume Cluster", location=location.belowbar,
+     style=shape.circle, color=color.yellow, size=size.tiny)
+
+plotshape(volCluster, title="Volume Cluster", location=location.belowbar,
+     style=shape.circle, color=color.yellow, size=size.tiny)
+
+// === VWMA Z-SCORE FOR VOLUME SIGNAL (EXPERIMENTAL) ===
+volDev  = ta.stdev(vol, lenVolMA)
+volZ    = (vol - volMA) / volDev
+highZVol = volZ > volZThreshold
+
+plotshape(highZVol, title="High Z-Score Volume", location=location.belowbar,
+     style=shape.xcross, color=color.blue, size=size.tiny)
