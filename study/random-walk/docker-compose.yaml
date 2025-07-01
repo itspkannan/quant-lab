@@ -1,0 +1,30 @@
+services:
+  randomwalk:
+    hostname: randomwalk
+    container_name: randomwalk
+    image: random_walk:latest
+    expose:
+      - "8000:8000"
+    volumes:
+      -  $PWD/static:/static
+    networks:
+      - randomwalk
+
+  nginx:
+    image: nginx:alpine
+    hostname: frontend
+    container_name: nginx_dashboard
+    ports:
+      - "8080:80"
+    volumes:
+      - $PWD/nginx/static:/usr/share/nginx/html:ro
+      - $PWD/nginx/config/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - randomwalk
+    networks:
+      - randomwalk
+
+networks:
+  randomwalk:
+    name: randomwalk
+    external: true
