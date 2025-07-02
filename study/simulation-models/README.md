@@ -1,4 +1,6 @@
-## 📊 Random Walk Hypothesis - Study
+## 📊 Stochastic Processes & Simulation Methods
+
+Random Walk Hypothesis - Study
 
 This project simulates random walk-based price data and displays an interactive analytics dashboard featuring price movement, volatility, max drawdown, return distribution, and key financial metrics.
 
@@ -10,6 +12,7 @@ It consists of:
 
 
 [Random Walk Hypothesis Concept](./randomwalk.md)
+[Montecarlo Concept](./montecarlo.md)
 
 ## Development Guideline
 
@@ -39,19 +42,13 @@ It consists of:
 ### 🏗️ Project Structure
 
 ```
-.
-├── app/                    # Sanic backend app
-│   ├── controllers/        # API route handlers (metrics, price, health)
-│   ├── simulator.py        # Price + return generator
-│   ├── statistics.py       # Sharpe, Drawdown, CAGR, Volatility
-│   └── app.py              # Sanic startup and blueprint loader
-├── nginx/                  # NGINX configuration and static files
-│   ├── nginx.conf
-│   └── index.html          # Plotly dashboard UI
-├── static/                 # Mounted HTML output (optional)
-├── Dockerfile              # Builds Sanic app image
-├── docker-compose.yml      # Orchestrates Sanic + NGINX
-└── requirements.txt
+├── nginx # nginx files , index.html, static file and conf
+├── scripts # scripts to be executed in CLI
+├── simulation_models
+│   ├── app.py
+│   ├── controllers        # Controller for Rest API
+│   ├── simulator          # Simulator code for montecarlo and random walk
+│   └── statistics         # code to capture various statistics
 ```
 
 ### Commands
@@ -68,14 +65,15 @@ Available commands:
   clean.python  🧽 Cleanup the development environment temporary files
   format.python 🎨 Format code using Ruff (Black-compatible)
   help          📖 Help message
+  init          🧰  Initialize for development environment
   init.infra    🌐 Create the infrastructure
   init.python   🧰 Initialize the Poetry development environment
   lint.python   🔍 Run static analysis with Ruff and Mypy
-  logs.app      📜 View application logs
-  start.app     🚀 Start App
-  stop.app      🛑 Stop App
+  logs          📜 View application logs
+  start         🚀 Start App
+  stop          🛑 Stop App
+  test          ✅ Run tests
   test.python   ✅ Run tests with Pytest and show coverage
-
 ```
 
 ## 🚀 Running Locally
@@ -88,12 +86,13 @@ The following will initialize the environment , create the necessary build artif
 ```bash
 make init
 make build
-make start.app
+make start
 ```
 
 open in browser the page [http://localhost:8080](http://localhost:8080)
 
 ![Randomwalk Dashboard ](randomwalk_dashboard.png)
+![Montecarlo](montecarlo.png))
 
 ### NGINX (`nginx.conf`)
 

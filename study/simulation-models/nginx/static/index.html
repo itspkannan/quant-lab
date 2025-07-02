@@ -2,9 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>📊Random Walk Study</title>
+  <title>📊 Random Walk & Monte Carlo</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
+    body { font-family: sans-serif; }
+    .tab {
+      overflow: hidden;
+      background-color: #f1f1f1;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    .tab button.active {
+      background-color: #ccc;
+    }
+
+    .tabcontent {
+      display: none;
+      padding: 20px;
+    }
+
     #metrics-panel {
       position: absolute;
       top: 80px;
@@ -13,41 +43,45 @@
       border: 1px solid #ccc;
       padding: 12px 16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      font-family: sans-serif;
       font-size: 14px;
       border-radius: 8px;
-    }
-
-    #metrics-panel h4 {
-      margin-top: 0;
-      text-align: center;
-    }
-
-    #metrics-panel table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    #metrics-panel th, #metrics-panel td {
-      padding: 6px 8px;
-      text-align: right;
-    }
-
-    #metrics-panel th {
-      background-color: #d3dce6;
-      text-align: left;
     }
   </style>
 </head>
 <body>
-  <div id="quad-dashboard" style="width:95vw; height:95vh;"></div>
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'RandomWalk')" id="defaultOpen">📈 Random Walk</button>
+    <button class="tablinks" onclick="openTab(event, 'MonteCarlo')">📉 Monte Carlo</button>
+  </div>
 
-  <div id="metrics-panel">
-    <h4>📋 Metrics</h4>
-    <table id="metrics-table"></table>
+  <div id="RandomWalk" class="tabcontent">
+    <div id="quad-dashboard" style="width:95vw; height:95vh;"></div>
+    <div id="metrics-panel">
+      <h4>📋 Metrics</h4>
+      <table id="metrics-table"></table>
+    </div>
+  </div>
+
+  <div id="MonteCarlo" class="tabcontent">
+    <div id="montecarlo-chart" style="width:95vw; height:95vh;"></div>
   </div>
 
   <script>
+    function openTab(evt, tabName) {
+      const tabcontent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      const tablinks = document.getElementsByClassName("tablinks");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    document.getElementById("defaultOpen").click();
+
     async function renderDashboard() {
       const priceRes = await fetch('/data/price');
       const data = await priceRes.json();
@@ -77,7 +111,7 @@
       ];
 
       const layout = {
-        title: '📊 Random Walk Study ',
+        title: '📊 Random Walk Study',
         grid: { rows: 2, columns: 2, pattern: 'independent' },
         xaxis1: { title: 'Day' },
         yaxis1: { title: 'Price' },
@@ -99,7 +133,30 @@
       document.getElementById('metrics-table').innerHTML = rows;
     }
 
+    async function renderMonteCarlo() {
+      const res = await fetch('/data/montecarlo');
+      const { paths } = await res.json();
+
+        const traces = paths.map((prices, i) => {
+          const finalPrice = prices[prices.length - 1].toFixed(2);
+          return {
+            y: prices,
+            type: 'scatter',
+            mode: 'lines',
+            name: `$${finalPrice}`,
+            line: { width: 1 }
+          };
+        });
+
+      Plotly.newPlot('montecarlo-chart', traces, {
+        title: '📉 Monte Carlo Simulated Price Paths',
+        xaxis: { title: 'Days' },
+        yaxis: { title: 'Simulated Price' }
+      });
+    }
+
     renderDashboard();
+    renderMonteCarlo();
   </script>
 </body>
 </html>

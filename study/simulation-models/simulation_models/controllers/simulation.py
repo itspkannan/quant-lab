@@ -1,11 +1,11 @@
 
 from sanic import Request, HTTPResponse, json
 
-from random_walk.simulator import generate_price_walk
-from random_walk.statistics import sharpe_ratio, max_drawdown, annualized_volatility, cagr
+from simulation_models.simulator import generate_price_walk, MonteCarlo
+from simulation_models.statistics import sharpe_ratio, max_drawdown, annualized_volatility, cagr
 
 
-class RandomwalkController:
+class SimulationController:
     async def metrics(self, request: Request) -> HTTPResponse:
         df = generate_price_walk()
         metrics = {
@@ -16,7 +16,9 @@ class RandomwalkController:
         }
         return json(metrics)
 
-
     async def prices(self, request: Request) -> HTTPResponse:
         df = generate_price_walk()
         return json(df.to_dict(orient="records"))
+
+    async def montecarlo(self, request: Request) -> HTTPResponse:
+        return json(await MonteCarlo().generate())

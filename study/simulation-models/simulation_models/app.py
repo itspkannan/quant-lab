@@ -4,8 +4,8 @@ from sanic import Blueprint, Sanic
 from sanic.worker.loader import AppLoader
 from sanic_ext import Extend
 
-from random_walk.controllers import HealthCheckController
-from random_walk.controllers.randomwalk_controller import RandomwalkController
+from simulation_models.controllers import HealthCheckController
+from simulation_models.controllers.simulation import SimulationController
 
 
 def register_routes(app: Sanic):
@@ -13,12 +13,13 @@ def register_routes(app: Sanic):
     health_check_bp = Blueprint("healthcheck")
     health_check_bp.add_route(health_controller.get, "/health", methods=["GET"])
 
-    metrics_controller = RandomwalkController()
-    metrics_bp = Blueprint("metrics", url_prefix="/api/v1")
-    metrics_bp.add_route(metrics_controller.metrics, "/data/metrics", methods=["GET"])
-    metrics_bp.add_route(metrics_controller.prices, "/data/price", methods=["GET"])
+    simulation_controller = SimulationController()
+    simulation_bp = Blueprint("metrics", url_prefix="/api/v1")
+    simulation_bp.add_route(simulation_controller.metrics, "/data/metrics", methods=["GET"])
+    simulation_bp.add_route(simulation_controller.prices, "/data/price", methods=["GET"])
+    simulation_bp.add_route(simulation_controller.montecarlo, "/data/montecarlo", methods=["GET"])
     app.blueprint(health_check_bp)
-    app.blueprint(metrics_bp)
+    app.blueprint(simulation_bp)
 
 
 def __create_app(app_name: str, **kwargs):

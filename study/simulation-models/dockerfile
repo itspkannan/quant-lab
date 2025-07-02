@@ -38,13 +38,13 @@ WORKDIR /app
 COPY --from=app-builder /app/.venv /app/.venv/
 
 COPY main.py /app
-COPY /random_walk /app/random_walk
+COPY /simulation_models /app/simulation_models
 
-RUN groupadd -r random_walk --gid=10000 && \
-    useradd --no-create-home -s /bin/false -r -g random_walk --uid=999 random_walk && \
-    id -u random_walk | xargs -I{} chown -R {}:{} /app
+RUN groupadd -r simulation_models --gid=10000 && \
+    useradd --no-create-home -s /bin/false -r -g simulation_models --uid=999 simulation_models && \
+    id -u simulation_models | xargs -I{} chown -R {}:{} /app
 
-USER random_walk
+USER simulation_models
 
 ENV LANG=en_US.utf8 \
     PATH=/app/.venv/bin:/app:${PYTHONPATH}:${PATH}

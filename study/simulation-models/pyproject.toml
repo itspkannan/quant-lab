@@ -1,5 +1,5 @@
 [project]
-name = "montecarlo-simulation"
+name = "simulation-models"
 version = "0.1.0"
 description = ""
 authors = [
@@ -8,6 +8,13 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "pandas (>=2.3.0,<3.0.0)",
+    "numpy (>=2.3.1,<3.0.0)",
+    "plotly (>=6.2.0,<7.0.0)",
+    "scipy (>=1.16.0,<2.0.0)",
+    "sanic (>=25.3.0,<26.0.0)",
+    "sanic-ext (>=24.12.0,<25.0.0)",
+    "jinja2 (>=3.1.6,<4.0.0)"
 ]
 
 
@@ -28,7 +35,7 @@ pytest-cov = "^6.2.1"
 line-length = 100
 target-version = "py311"
 fix = true
-src = ["montecarlo_simulation"]
+src = ["simulation_models"]
 
 [tool.ruff.format]
 quote-style = "preserve"
@@ -44,5 +51,5 @@ exclude = ["tests/*"]
 strict = true
 
 [tool.pytest.ini_options]
-addopts = "--cov=montecarlo_simulation --cov-report=term-missing"
+addopts = "--cov=simulation_models --cov-report=term-missing"
 testpaths = ["tests"]
