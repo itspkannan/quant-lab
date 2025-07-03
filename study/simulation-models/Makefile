@@ -57,7 +57,7 @@ init.python: ## 🧰 Initialize the Poetry development environment
 	@echo "[Info] $(PROJECT_DESCRIPTION) Initialization of development Environment - Completed"
 
 .PHONY: build
-build: build.python build.docker ## 🏗️ Build Python and Rego policies
+build: build.python build.docker ## 🏗️ Build Python and docker image
 
 .PHONY: build.docker
 build.docker: ## 🐳 Build application docker image
